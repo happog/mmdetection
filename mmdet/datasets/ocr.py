@@ -126,6 +126,8 @@ class OCRDataset(Dataset):
         for label in labels[1:]:
             label = label.split(',')
             cls = label[-1]
+            if cls == '项目金额':
+                cls = '金额'
             if cls not in self.cat_ids:
                 # print(cls+" is not in classes!")
                 continue
