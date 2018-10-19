@@ -10,6 +10,18 @@ from torch.utils.data import Dataset
 from .transforms import (ImageTransform, BboxTransform, MaskTransform,
                          Numpy2Tensor)
 from .utils import to_tensor, show_ann, random_scale
+from pypinyin import pinyin, lazy_pinyin, Style
+
+def get_pinyin(names):
+    piny = lazy_pinyin(names)
+    piny = ''.join([x[0][0] for x in piny])
+    return piny
+
+def save_pinyin(namesfile, names):
+    piny = list(map(get_pinyin, names))
+    fp = open(namesfile, "w")
+    [fp.write(x+'\n') for x in piny]
+    return
 
 def load_classes(namesfile):
     # fp = open(namesfile, "r")
@@ -45,6 +57,7 @@ class OCRDataset(Dataset):
 
         # get the mapping from original category ids to labels
         self.cat_ids = load_classes(ann_file.replace('train.txt','ocr.names'))
+        save_pinyin(ann_file.replace('train.txt','ocr_en.names'), self.cat_ids)
         self.cat2label = {
             cat_id: i + 1
             for i, cat_id in enumerate(self.cat_ids)
@@ -126,8 +139,14 @@ class OCRDataset(Dataset):
         for label in labels[1:]:
             label = label.split(',')
             cls = label[-1]
-            if cls == '项目金额':
-                cls = '金额'
+            # if cls == '项目金额':
+            #     cls = '金额'
+            if cls in ['业务流水号','单价','金额','项目金额','年数值','月数值','日数值','条形码']:
+                cls = '数值'
+            elif cls in ['项目规格','数量单位','等级','门诊大额支付','退休补充支付','残军补助支付','单位补充支付','本次医保范围内金额','累计医保范围内金额','年度门诊大额累计支付','本次支付后个人余额','自付一','超封顶金额','自付二','自费','起付金额']:
+                cls = '项目'
+            elif cls in ['项目规格--表头','单价--表头','数量单位--表头','金额--表头','等级--表头','项目规格2--表头','单价2--表头','数量单位2--表头','金额2--表头','等级2--表头','基金支付--表头','个人账户支付--表头','个人支付金额--表头','收款单位--表头','收款人--表头','年--表头','月--表头','日--表头','发票号--表头','业务流水号--表头']:
+                cls = '其他表头'
             if cls not in self.cat_ids:
                 # print(cls+" is not in classes!")
                 continue

@@ -44,7 +44,7 @@ start_load = time.time()
 model = build_detector(cfg.model, test_cfg=cfg.test_cfg)
 # _ = load_checkpoint(model, 'https://s3.ap-northeast-2.amazonaws.com/open-mmlab/mmdetection/models/faster_rcnn_r50_fpn_1x_20181010-3d1b3351.pth')
 # load_checkpoint(model, 'faster_rcnn_r50_fpn_1x_20181010-3d1b3351.pth')
-load_checkpoint(model, 'logs/faster_rcnn_r50_fpn_1x/latest.pth')
+load_checkpoint(model, cfg.data_root+'logs/latest.pth')
 
 start = time.time()
 # test a single image
