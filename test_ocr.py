@@ -37,6 +37,9 @@ def save_result(img, result, out_file, namesfile, score_thr=0.8):
 
 # cfg = mmcv.Config.fromfile('configs/faster_rcnn_r50_fpn_1x.py')
 cfg = mmcv.Config.fromfile('configs/faster_rcnn_r50_fpn_ocr.py')
+# set num_classes
+cfg.model.bbox_head['num_classes'] = len(load_classes(cfg.data_root+'ocr.names')) + 1
+print('num_classes: %d'%(cfg.model.bbox_head['num_classes']))
 cfg.model.pretrained = None
 
 start_load = time.time()

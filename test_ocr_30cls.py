@@ -58,7 +58,7 @@ print('detection: load model in %2.2f sec and predict finished in %2.2f sec with
 save_result(img, result, out_file='res/'+imgfile.split('/')[-1], namesfile=cfg.data_root+'ocr_en.names')
 
 # test a list of images
-imgs = ['data/sample_1.png', 'data/sample_2.png']
+imgs = ['data/sample_1.png', 'data/sample_2.png', 'data/sample_3.jpg', 'data/sample_4.jpg']
 for i, result in enumerate(inference_detector(model, imgs, cfg, device='cuda:0')):
     # print(i, imgs[i])
     # print(result)
